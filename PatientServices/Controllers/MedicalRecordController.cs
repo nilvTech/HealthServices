@@ -13,6 +13,7 @@ namespace PatientServices.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MedicalRecordController : ControllerBase
     {
         private readonly IMedicalRecordService _medicalRecordService;
@@ -26,58 +27,99 @@ namespace PatientServices.Controllers
         [HttpGet("GetAllMedicalRecords")]
         public async Task<ActionResult<IEnumerable<MedicalRecord>>> GetMedicalRecords()
         {
-            var medicalRecords = await _medicalRecordService.GetMedicalRecordsAsync();
-            return Ok(medicalRecords);
+            try
+            {
+                var medicalRecords = await _medicalRecordService.GetMedicalRecordsAsync();
+                return Ok(medicalRecords);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it in some other way
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         // GET: api/MedicalRecord/5
-        [HttpGet("{id}")]
+        [HttpGet("GetMedicalRecordById/{id}")]
         public async Task<ActionResult<MedicalRecord>> GetMedicalRecord(int id)
         {
-            var medicalRecord = await _medicalRecordService.GetMedicalRecordByIdAsync(id);
-            if (medicalRecord == null)
+            try
             {
-                return NotFound();
+                var medicalRecord = await _medicalRecordService.GetMedicalRecordByIdAsync(id);
+                if (medicalRecord == null)
+                {
+                    return NotFound();
+                }
+                return Ok(medicalRecord);
             }
-            return Ok(medicalRecord);
+            catch (Exception ex)
+            {
+                // Log the exception or handle it in some other way
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         // PUT: api/MedicalRecord/5
-        [HttpPut("{id}")]
+        [HttpPut("UpdateMedicalRecord/{id}")]
         public async Task<IActionResult> PutMedicalRecord(int id, MedicalRecord medicalRecord)
         {
-            if (id != medicalRecord.RecordId)
+            try
             {
-                return BadRequest();
+                if (id != medicalRecord.RecordId)
+                {
+                    return BadRequest();
+                }
+
+                await _medicalRecordService.UpdateMedicalRecordAsync(medicalRecord);
+
+                return NoContent();
             }
-
-            await _medicalRecordService.UpdateMedicalRecordAsync(medicalRecord);
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                // Log the exception or handle it in some other way
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         // POST: api/MedicalRecord
-        [HttpPost]
+        [HttpPost("CreateMedicalRecord")]
         public async Task<ActionResult<MedicalRecord>> PostMedicalRecord(MedicalRecord medicalRecord)
         {
-            var id = await _medicalRecordService.AddMedicalRecordAsync(medicalRecord);
+            try
+            {
+                var id = await _medicalRecordService.AddMedicalRecordAsync(medicalRecord);
 
-            return CreatedAtAction(nameof(GetMedicalRecord), new { id }, medicalRecord);
+                return CreatedAtAction(nameof(GetMedicalRecord), new { id }, medicalRecord);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it in some other way
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         // DELETE: api/MedicalRecord/5
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteMedicalRecords/{id}")]
         public async Task<IActionResult> DeleteMedicalRecord(int id)
         {
-            var medicalRecord = await _medicalRecordService.GetMedicalRecordByIdAsync(id);
-            if (medicalRecord == null)
+            try
             {
-                return NotFound();
+                var medicalRecord = await _medicalRecordService.GetMedicalRecordByIdAsync(id);
+                if (medicalRecord == null)
+                {
+                    return NotFound();
+                }
+
+                await _medicalRecordService.DeleteMedicalRecordAsync(id);
+
+                return NoContent();
             }
-
-            await _medicalRecordService.DeleteMedicalRecordAsync(id);
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                // Log the exception or handle it in some other way
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
     }
+
 }

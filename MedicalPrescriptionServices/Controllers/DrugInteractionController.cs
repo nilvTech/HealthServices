@@ -5,34 +5,31 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using MedicalPrescriptionServices.Models.Patient;
+using MedicalPrescription.Models;
+using MedicalPrescriptionServices;
 using MedicalPrescriptionServices.Services.Interfaces;
 
-namespace PatientServices.Controllers
+namespace MedicalPrescriptionServices.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-
-    public class PatientController : ControllerBase
+    public class DrugInteractionController : ControllerBase
     {
-        private readonly IPatientService _patientService;
+        private readonly IDrugInteractionService _drugInteractionService;
 
-        public PatientController(IPatientService patientService)
+        public DrugInteractionController(IDrugInteractionService drugInteractionService)
         {
-            _patientService = patientService;
+            _drugInteractionService = drugInteractionService;
         }
 
-        // GET: api/Patients
-        [HttpGet("GetAllPatients")]
-        public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
+        [HttpGet("GetAllDrugInteraction")]
+        public async Task<ActionResult<IEnumerable<DrugInteraction>>> GetDrugInteractions()
         {
             try
             {
-                var patients = await _patientService.GetPatientsAsync();
-                return Ok(patients);
+                var drugInteractions = await _drugInteractionService.GetAllDrugInteractionsAsync();
+                return Ok(drugInteractions);
             }
             catch (Exception ex)
             {
@@ -41,18 +38,18 @@ namespace PatientServices.Controllers
             }
         }
 
-        // GET: api/Patients/5
-        [HttpGet("GetPatientById/{id}")]
-        public async Task<ActionResult<Patient>> GetPatient(int id)
+        [HttpGet("GetDrugInteractionById/{id}")]
+        public async Task<ActionResult<DrugInteraction>> GetDrugInteraction(int id)
         {
             try
             {
-                var patient = await _patientService.GetPatientByIdAsync(id);
-                if (patient == null)
+                var drugInteraction = await _drugInteractionService.GetDrugInteractionByIdAsync(id);
+                if (drugInteraction == null)
                 {
                     return NotFound();
                 }
-                return Ok(patient);
+
+                return Ok(drugInteraction);
             }
             catch (Exception ex)
             {
@@ -61,17 +58,17 @@ namespace PatientServices.Controllers
             }
         }
 
-        // PUT: api/Patients/5
-        [HttpPut("UpdatePatient/{id}")]
-        public async Task<IActionResult> PutPatient(int id, Patient patient)
+        [HttpPut("UpdateDrugInteraction/{id}")]
+        public async Task<IActionResult> PutDrugInteraction(int id, DrugInteraction drugInteraction)
         {
             try
             {
-                if (id != patient.PatientId)
+                var result = await _drugInteractionService.UpdateDrugInteractionAsync(id, drugInteraction);
+                if (!result)
                 {
                     return BadRequest();
                 }
-                await _patientService.UpdatePatientAsync(patient);
+
                 return NoContent();
             }
             catch (Exception ex)
@@ -81,14 +78,13 @@ namespace PatientServices.Controllers
             }
         }
 
-        // POST: api/Patients
-        [HttpPost("CreatePatient")]
-        public async Task<ActionResult<Patient>> PostPatient(Patient patient)
+        [HttpPost("CreateDrugInteraction")]
+        public async Task<ActionResult<DrugInteraction>> PostDrugInteraction(DrugInteraction drugInteraction)
         {
             try
             {
-                await _patientService.AddPatientAsync(patient);
-                return CreatedAtAction(nameof(GetPatient), new { id = patient.PatientId }, patient);
+                var createdDrugInteraction = await _drugInteractionService.CreateDrugInteractionAsync(drugInteraction);
+                return CreatedAtAction("GetDrugInteraction", new { id = createdDrugInteraction.Id }, createdDrugInteraction);
             }
             catch (Exception ex)
             {
@@ -97,17 +93,17 @@ namespace PatientServices.Controllers
             }
         }
 
-        // DELETE: api/Patients/5
-        [HttpDelete("DeletePatient/{id}")]
-        public async Task<IActionResult> DeletePatient(int id)
+        [HttpDelete("DeleteDrugInteraction/{id}")]
+        public async Task<IActionResult> DeleteDrugInteraction(int id)
         {
             try
             {
-                if (!_patientService.PatientExists(id))
+                var result = await _drugInteractionService.DeleteDrugInteractionAsync(id);
+                if (!result)
                 {
                     return NotFound();
                 }
-                await _patientService.DeletePatientAsync(id);
+
                 return NoContent();
             }
             catch (Exception ex)
@@ -117,17 +113,21 @@ namespace PatientServices.Controllers
             }
         }
 
-        [HttpGet("GetPatientByName/{name}")]
-        public async Task<ActionResult<Patient>> GetPatientByName(string name)
+        [HttpGet("CheckAvailability/{drugName}")]
+        public async Task<ActionResult<string>> CheckDrugAvailability(string drugName)
         {
             try
             {
-                var patient = await _patientService.GetPatientByNameAsync(name);
-                if (patient == null)
+                var isAvailable = await _drugInteractionService.CheckDrugAvailability(drugName);
+
+                if (isAvailable > 0)
                 {
-                    return NotFound();
+                    return Ok($"{drugName} is available with quantity {isAvailable}");
                 }
-                return Ok(patient);
+                else
+                {
+                    return NotFound($"{drugName} is not available");
+                }
             }
             catch (Exception ex)
             {

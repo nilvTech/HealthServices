@@ -15,7 +15,7 @@ namespace PatientServices.Models.Patient
         [Required(ErrorMessage = "Message is required")]
         public string Message { get; set; }
 
-        public bool IsRead { get; set; }
+        public bool IsRead { get; set; }= true;
 
         [Required(ErrorMessage = "SentDateTime is required")]
         [DataType(DataType.DateTime)]
