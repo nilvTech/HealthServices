@@ -15,11 +15,15 @@ namespace MedicalPrescriptionServices.ConfigHelper
             builder.Services.AddTransient<IPatientService, PatientService>();
             builder.Services.AddTransient<IPrescriptionService, PrescriptionService>();
             builder.Services.AddTransient<IPrescriptionHistoryService, PrescriptionHistoryService>();
+            builder.Services.AddTransient<IDrugInteractionService, DrugInteractionService>();
+            builder.Services.AddTransient<IPrescriptionAnalyticService, PrescriptionAnalyticService>();
 
             builder.Services.AddTransient<IPrescriptionRepository, PrescriptionRepository>();
             builder.Services.AddTransient<IMedicationRepository, MedicationRepository>();
             builder.Services.AddTransient<IPatientRepository, PatientRepository>();
+            builder.Services.AddTransient<IDrugInteractionRepository, DrugInteractionRepository>();
             builder.Services.AddTransient<IPrescriptionHistoryRepository, PrescriptionHistoryRepository>();
+            builder.Services.AddTransient<IPrescriptionAnalyticRepository, PrescriptionAnalyticRepository>();
 
         }
     }

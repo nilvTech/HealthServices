@@ -47,5 +47,14 @@ namespace MedicalPrescriptionServices.Repositories
         {
             return _context.Prescriptions.Any(e => e.Id == id);
         }
+        public async Task<IEnumerable<Prescription>> GetPrescriptionsByPatientIdAsync(int patientId)
+        {
+            return await _context.Prescriptions.Where(p => p.PatientId == patientId).ToListAsync();
+        }
+        public async Task<bool> ValidatePrescription(int id)
+        {
+            var prescriptionValidation = await _context.PrescriptionValidations.FindAsync(id);
+            return prescriptionValidation.IsValidated;
+        }
     }
 }

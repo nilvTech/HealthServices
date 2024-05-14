@@ -9,5 +9,9 @@ namespace MedicalPrescriptionServices.Services.Interfaces
         Task<int> AddPrescriptionAsync(Prescription prescription);
         Task UpdatePrescriptionAsync(Prescription prescription);
         Task DeletePrescriptionAsync(int id);
+        Task<IEnumerable<Prescription>> GetPrescriptionsByPatientIdAsync(int patientId);
+        Task<bool> ValidatePrescription(int id);
+
+
     }
 }

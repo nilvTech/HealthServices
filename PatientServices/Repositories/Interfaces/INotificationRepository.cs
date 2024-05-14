@@ -1,4 +1,5 @@
-﻿using PatientServices.Models.Patient;
+﻿using PatientServices.Models;
+using PatientServices.Models.Patient;
 
 namespace PatientServices.Repositories.Interfaces
 {
@@ -10,5 +11,6 @@ namespace PatientServices.Repositories.Interfaces
         Task UpdateNotificationAsync(Notification notification);
         Task DeleteNotificationAsync(int id);
         bool NotificationExists(int id);
+        Task<bool> SendNotificationAsync(NotificationRequest notificationRequest);
     }
 }
