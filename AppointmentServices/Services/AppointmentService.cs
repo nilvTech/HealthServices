@@ -1,8 +1,8 @@
 ﻿using AppointmentServices.Models;
 using AppointmentServices.Repositories.IRepository;
-using AppointmentServices.Services;
 using Confluent.Kafka;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AppointmentServices.Services
@@ -20,6 +20,7 @@ namespace AppointmentServices.Services
                 BootstrapServers = "localhost:9092"
             };
         }
+
         public void CreateAppointment(Appointment appointment)
         {
             _appointmentRepository.CreateAppointment(appointment);
@@ -35,6 +36,16 @@ namespace AppointmentServices.Services
             // Send appointment data to Kafka
             using var producer = new ProducerBuilder<Null, string>(_kafkaConfig).Build();
             await producer.ProduceAsync(KafkaTopics.AppointmentTopic, new Message<Null, string> { Value = appointmentJson });
+        }
+
+        public List<Appointment> GetAllAppointments()
+        {
+            return _appointmentRepository.GetAllAppointments();
+        }
+
+        public Appointment GetAppointmentById(int id)
+        {
+            return _appointmentRepository.GetAppointmentById(id);
         }
     }
 }

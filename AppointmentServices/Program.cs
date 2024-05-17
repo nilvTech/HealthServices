@@ -17,7 +17,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
 });
-builder.Services.AddScoped<IAppointmentSchedulingRepository, AppointmentSchedulingRespository>();
+builder.Services.AddScoped<IAppointmentSchedulingRepository, AppointmentSchedulingRepository>();
 builder.Services.AddTransient<IAppointmentService, AppointmentService>();
 builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddEndpointsApiExplorer();

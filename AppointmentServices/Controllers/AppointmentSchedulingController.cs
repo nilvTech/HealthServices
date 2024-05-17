@@ -2,10 +2,10 @@
 using AppointmentServices.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace AppointmentServices.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
@@ -23,6 +23,26 @@ namespace AppointmentServices.Controllers
         {
             _appointmentService.CreateAppointment(appointment);
             return Ok();
+        }
+
+        // GET method to retrieve all appointments
+        [HttpGet]
+        public IActionResult GetAppointments()
+        {
+            var appointments = _appointmentService.GetAllAppointments();
+            return Ok(appointments);
+        }
+
+        // GET method to retrieve a specific appointment by ID
+        [HttpGet("{id}")]
+        public IActionResult GetAppointmentById(int id)
+        {
+            var appointment = _appointmentService.GetAppointmentById(id);
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+            return Ok(appointment);
         }
     }
 }
