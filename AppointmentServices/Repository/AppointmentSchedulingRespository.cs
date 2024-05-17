@@ -1,14 +1,17 @@
 ﻿using AppointmentServices.Context;
 using AppointmentServices.Models;
 using AppointmentServices.Repositories.IRepository;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AppointmentServices.Repositories
 {
-    public class AppointmentSchedulingRespository : IAppointmentSchedulingRepository
+    public class AppointmentSchedulingRepository : IAppointmentSchedulingRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public AppointmentSchedulingRespository(ApplicationDbContext context)
+        public AppointmentSchedulingRepository(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -17,6 +20,16 @@ namespace AppointmentServices.Repositories
         {
             _context.Appointments.Add(appointment);
             _context.SaveChanges();
+        }
+
+        public List<Appointment> GetAllAppointments()
+        {
+            return _context.Appointments.ToList();
+        }
+
+        public Appointment GetAppointmentById(int id)
+        {
+            return _context.Appointments.FirstOrDefault(a => a.AppointmentId == id);
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using AppointmentServices.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace AppointmentServices.Services
+public interface IAppointmentService
 {
-    public interface IAppointmentService
-    {
-        void CreateAppointment(Appointment appointment);
-    }
+    void CreateAppointment(Appointment appointment);
+    Task CreateAppointmentAsync(Appointment appointment);
+    List<Appointment> GetAllAppointments();
+    Appointment GetAppointmentById(int id);
 }
