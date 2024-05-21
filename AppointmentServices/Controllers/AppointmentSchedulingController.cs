@@ -17,12 +17,11 @@ namespace AppointmentServices.Controllers
         {
             _appointmentService = appointmentService;
         }
-
         [HttpPost]
-        public IActionResult CreateAppointment([FromBody] Appointment appointment)
+        public async Task<IActionResult> CreateAppointment([FromBody] Appointment appointment)
         {
-            _appointmentService.CreateAppointment(appointment);
-            return Ok();
+            await _appointmentService.CreateAppointmentAsync(appointment);
+            return Ok("Appointment Created and Sent to Kafka Successfully");
         }
 
         // GET method to retrieve all appointments

@@ -24,7 +24,7 @@ namespace AppointmentServices.Controllers
             _service = service;
             _kafkaConfig = new ConsumerConfig
             {
-                BootstrapServers = "localhost:9092",
+                BootstrapServers = "127.0.0.1:9092",
                 GroupId = "satisfaction-group",
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
@@ -33,33 +33,24 @@ namespace AppointmentServices.Controllers
         [HttpPost]
         public async Task<IActionResult> AddSurvey([FromBody] PatientSatisfaction survey)
         {
-            try
-            {
-                var addedSurvey = await _service.AddSurvey(survey);
-                return CreatedAtAction(nameof(GetSurveyById), new { id = addedSurvey.Id }, addedSurvey);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("An error occurred while processing your request.");
-            }
+            var addedSurvey = await _service.AddSurvey(survey);
+            return CreatedAtAction(nameof(GetSurveyById), new { id = addedSurvey.Id }, addedSurvey);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetAllSurveys()
         {
             try
             {
-                // List to store appointment data
                 var appointments = new List<Appointment>();
 
                 // Start Kafka consumer
                 using var consumer = new ConsumerBuilder<Ignore, string>(_kafkaConfig).Build();
                 consumer.Subscribe(KafkaTopics.AppointmentTopic);
 
-                // Use a cancellation token source to control the consumer loop
                 var cancellationTokenSource = new CancellationTokenSource();
 
-                // Start a task to consume messages asynchronously
                 var consumerTask = System.Threading.Tasks.Task.Run(async () =>
                 {
                     try
@@ -67,13 +58,11 @@ namespace AppointmentServices.Controllers
                         while (!cancellationTokenSource.Token.IsCancellationRequested)
                         {
                             var consumeResult = consumer.Consume(cancellationTokenSource.Token);
-                            var appointmentDataJson = consumeResult.Message.Value;
+                            var appointmentJson = consumeResult.Message.Value;
 
-                            // Deserialize appointment data from JSON
-                            var appointmentData = JsonConvert.DeserializeObject<Appointment>(appointmentDataJson);
+                            var appointment = JsonConvert.DeserializeObject<Appointment>(appointmentJson);
 
-                            // Add appointment data to the list
-                            appointments.Add(appointmentData);
+                            appointments.Add(appointment);
                         }
                     }
                     catch (OperationCanceledException)
@@ -82,22 +71,15 @@ namespace AppointmentServices.Controllers
                     }
                     catch (Exception ex)
                     {
-                        // Log or handle other exceptions
                         Console.WriteLine($"Error consuming message: {ex.Message}");
                     }
                 });
 
-                // Wait for a specific timeout or until a certain condition is met
                 await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(30)); 
 
-                // Cancel the consumer task after the timeout
                 cancellationTokenSource.Cancel();
 
-                // Wait for the consumer task to complete
                 await consumerTask;
-
-                // Now you have all appointment data in the 'appointments' list
-                // You can process this data or return it directly
 
                 return Ok(appointments);
             }
