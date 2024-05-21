@@ -12,12 +12,12 @@ namespace AppointmentServices.Services
         private readonly IAppointmentSchedulingRepository _appointmentRepository;
         private readonly ProducerConfig _kafkaConfig;
 
-        public AppointmentService(IAppointmentSchedulingRepository appointmentRepository)
+        public AppointmentService(IAppointmentSchedulingRepository appointmentRepository, IConfiguration configuration)
         {
             _appointmentRepository = appointmentRepository;
             _kafkaConfig = new ProducerConfig
             {
-                BootstrapServers = "localhost:9092"
+                BootstrapServers = configuration["Kafka:BootstrapServers"]
             };
         }
 
@@ -30,7 +30,6 @@ namespace AppointmentServices.Services
         {
             _appointmentRepository.CreateAppointment(appointment);
 
-            // Serialize appointment object to JSON
             var appointmentJson = JsonConvert.SerializeObject(appointment);
 
             // Send appointment data to Kafka

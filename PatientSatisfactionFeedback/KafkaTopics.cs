@@ -2,6 +2,6 @@
 {
     public class KafkaTopics
     {
-        public const string AppointmentTopic = "patient-satisfaction-topic";
+        public const string AppointmentTopic = "appointment-topic";
     }
-}
+}   
