@@ -1,10 +1,10 @@
-﻿using AppointmentServices.Models;
-using AppointmentServices.Repository;
+﻿using PatientSatisfactionFeedback.Models;
+using PatientSatisfactionFeedback.Repository;
 using PatientSatisfactionFeedback.Services.IServices;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AppointmentServices.Services
+namespace PatientSatisfactionFeedback.Services
 {
     public class PatientSatisfactionService : IPatientSatisfactionService
     {

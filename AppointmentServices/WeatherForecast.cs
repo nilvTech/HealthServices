@@ -1,4 +1,4 @@
-namespace AppointmentServices
+namespace PatientSatisfactionFeedback
 {
     public class WeatherForecast
     {

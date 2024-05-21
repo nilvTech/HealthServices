@@ -1,6 +1,6 @@
-using AppointmentServices.Context;
-using AppointmentServices.Repository;
-using AppointmentServices.Services;
+using PatientSatisfactionFeedback.Context;
+using PatientSatisfactionFeedback.Repository;
+using PatientSatisfactionFeedback.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

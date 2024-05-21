@@ -1,5 +1,4 @@
-﻿using AppointmentServices.Models;
-using AppointmentServices.Context;
+﻿using PatientSatisfactionFeedback.Context;
 using Jose;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
@@ -9,8 +8,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using PatientSatisfactionFeedback.Models;
 
-namespace AppointmentServices.Controllers
+namespace PatientSatisfactionFeedback.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

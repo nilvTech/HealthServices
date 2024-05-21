@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AppointmentServices.Models
+namespace PatientSatisfactionFeedback.Models
 {
     public class PatientSatisfaction
     {
@@ -9,9 +9,7 @@ namespace AppointmentServices.Models
         public string SurveyQuestion { get; set; }
         public int Rating { get; set; }
         public string Feedback { get; set; }
-
         public string Name { get; set; }
-
         public DateTime SurveyDate { get; set; }
     }
 }

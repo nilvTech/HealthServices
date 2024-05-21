@@ -1,4 +1,4 @@
-﻿namespace AppointmentServices.Services
+﻿namespace PatientSatisfactionFeedback.Services
 {
     public static class KafkaTopics
     {
