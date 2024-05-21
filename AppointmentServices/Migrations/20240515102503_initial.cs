@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace AppointmentServices.Migrations
+namespace PatientSatisfactionFeedback.Migrations
 {
     public partial class initial : Migration
     {

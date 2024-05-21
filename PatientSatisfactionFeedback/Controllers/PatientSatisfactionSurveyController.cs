@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using AppointmentServices.Models;
+using PatientSatisfactionFeedback.Models;
 using PatientSatisfactionFeedback.Services.IServices;
 using System;
 using System.Threading.Tasks;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Exchange.WebServices.Data;
 using PatientSatisfactionFeedback;
 
-namespace AppointmentServices.Controllers
+namespace PatientSatisfactionFeedback.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

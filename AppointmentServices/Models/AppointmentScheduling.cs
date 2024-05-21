@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace AppointmentServices.Models
+namespace PatientSatisfactionFeedback.Models
 {
     public class Appointment
     {

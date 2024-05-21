@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AppointmentServices.Models
+namespace PatientSatisfactionFeedback.Models
 {
     public class User
     {

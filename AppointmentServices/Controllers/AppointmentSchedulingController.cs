@@ -1,10 +1,10 @@
-﻿using AppointmentServices.Models;
-using AppointmentServices.Services;
+﻿using PatientSatisfactionFeedback.Models;
+using PatientSatisfactionFeedback.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
-namespace AppointmentServices.Controllers
+namespace PatientSatisfactionFeedback.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

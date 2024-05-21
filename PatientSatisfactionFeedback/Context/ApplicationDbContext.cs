@@ -1,8 +1,8 @@
-﻿using AppointmentServices.Models;
-using AppointmentServices.Models;
+﻿using PatientSatisfactionFeedback.Models;
 using Microsoft.EntityFrameworkCore;
+using PatientSatisfactionFeedback.Models;
 
-namespace AppointmentServices.Context
+namespace PatientSatisfactionFeedback.Context
 {
     public class ApplicationDbContext : DbContext
     {

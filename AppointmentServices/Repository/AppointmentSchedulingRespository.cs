@@ -1,11 +1,11 @@
-﻿using AppointmentServices.Context;
-using AppointmentServices.Models;
-using AppointmentServices.Repositories.IRepository;
+﻿using PatientSatisfactionFeedback.Context;
+using PatientSatisfactionFeedback.Models;
+using PatientSatisfactionFeedback.Repositories.IRepository;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AppointmentServices.Repositories
+namespace PatientSatisfactionFeedback.Repositories
 {
     public class AppointmentSchedulingRepository : IAppointmentSchedulingRepository
     {

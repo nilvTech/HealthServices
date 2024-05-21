@@ -1,9 +1,9 @@
 ﻿// Context/ApplicationDbContext.cs
-using AppointmentServices.Models;
-using AppointmentServices.Models;
+using PatientSatisfactionFeedback.Models;
+using PatientSatisfactionFeedback.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AppointmentServices.Context
+namespace PatientSatisfactionFeedback.Context
 {
     public class ApplicationDbContext : DbContext
     {

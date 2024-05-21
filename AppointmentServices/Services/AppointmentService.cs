@@ -1,11 +1,11 @@
-﻿using AppointmentServices.Models;
-using AppointmentServices.Repositories.IRepository;
+﻿using PatientSatisfactionFeedback.Models;
+using PatientSatisfactionFeedback.Repositories.IRepository;
 using Confluent.Kafka;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AppointmentServices.Services
+namespace PatientSatisfactionFeedback.Services
 {
     public class AppointmentService : IAppointmentService
     {

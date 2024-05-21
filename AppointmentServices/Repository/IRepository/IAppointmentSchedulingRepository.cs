@@ -1,7 +1,7 @@
-﻿using AppointmentServices.Models;
+﻿using PatientSatisfactionFeedback.Models;
 using System.Collections.Generic;
 
-namespace AppointmentServices.Repositories.IRepository
+namespace PatientSatisfactionFeedback.Repositories.IRepository
 {
     public interface IAppointmentSchedulingRepository
     {
