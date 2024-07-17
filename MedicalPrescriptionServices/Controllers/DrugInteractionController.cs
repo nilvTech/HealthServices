@@ -26,115 +26,73 @@ namespace MedicalPrescriptionServices.Controllers
         [HttpGet("GetAllDrugInteraction")]
         public async Task<ActionResult<IEnumerable<DrugInteraction>>> GetDrugInteractions()
         {
-            try
-            {
-                var drugInteractions = await _drugInteractionService.GetAllDrugInteractionsAsync();
-                return Ok(drugInteractions);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it in some other way
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            var drugInteractions = await _drugInteractionService.GetAllDrugInteractionsAsync();
+            return Ok(drugInteractions);
         }
+
 
         [HttpGet("GetDrugInteractionById/{id}")]
         public async Task<ActionResult<DrugInteraction>> GetDrugInteraction(int id)
         {
-            try
+            var drugInteraction = await _drugInteractionService.GetDrugInteractionByIdAsync(id);
+            if (drugInteraction == null)
             {
-                var drugInteraction = await _drugInteractionService.GetDrugInteractionByIdAsync(id);
-                if (drugInteraction == null)
-                {
-                    return NotFound();
-                }
+                return NotFound();
+            }
 
-                return Ok(drugInteraction);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it in some other way
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            return Ok(drugInteraction);
         }
+
 
         [HttpPut("UpdateDrugInteraction/{id}")]
         public async Task<IActionResult> PutDrugInteraction(int id, DrugInteraction drugInteraction)
         {
-            try
+            var result = await _drugInteractionService.UpdateDrugInteractionAsync(id, drugInteraction);
+            if (!result)
             {
-                var result = await _drugInteractionService.UpdateDrugInteractionAsync(id, drugInteraction);
-                if (!result)
-                {
-                    return BadRequest();
-                }
+                return BadRequest();
+            }
 
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it in some other way
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            return NoContent();
         }
+
 
         [HttpPost("CreateDrugInteraction")]
         public async Task<ActionResult<DrugInteraction>> PostDrugInteraction(DrugInteraction drugInteraction)
         {
-            try
-            {
-                var createdDrugInteraction = await _drugInteractionService.CreateDrugInteractionAsync(drugInteraction);
-                return CreatedAtAction("GetDrugInteraction", new { id = createdDrugInteraction.Id }, createdDrugInteraction);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it in some other way
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            var createdDrugInteraction = await _drugInteractionService.CreateDrugInteractionAsync(drugInteraction);
+            return CreatedAtAction("GetDrugInteraction", new { id = createdDrugInteraction.Id }, createdDrugInteraction);
         }
+
 
         [HttpDelete("DeleteDrugInteraction/{id}")]
         public async Task<IActionResult> DeleteDrugInteraction(int id)
         {
-            try
+            var result = await _drugInteractionService.DeleteDrugInteractionAsync(id);
+            if (!result)
             {
-                var result = await _drugInteractionService.DeleteDrugInteractionAsync(id);
-                if (!result)
-                {
-                    return NotFound();
-                }
+                return NotFound();
+            }
 
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it in some other way
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            return NoContent();
         }
+
 
         [HttpGet("CheckAvailability/{drugName}")]
         public async Task<ActionResult<string>> CheckDrugAvailability(string drugName)
         {
-            try
-            {
-                var isAvailable = await _drugInteractionService.CheckDrugAvailability(drugName);
+            var isAvailable = await _drugInteractionService.CheckDrugAvailability(drugName);
 
-                if (isAvailable > 0)
-                {
-                    return Ok($"{drugName} is available with quantity {isAvailable}");
-                }
-                else
-                {
-                    return NotFound($"{drugName} is not available");
-                }
-            }
-            catch (Exception ex)
+            if (isAvailable > 0)
             {
-                // Log the exception or handle it in some other way
-                return StatusCode(500, "An error occurred while processing your request.");
+                return Ok($"{drugName} is available with quantity {isAvailable}");
+            }
+            else
+            {
+                return NotFound($"{drugName} is not available");
             }
         }
+
     }
 
 }
