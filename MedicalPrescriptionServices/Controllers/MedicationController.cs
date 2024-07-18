@@ -27,92 +27,58 @@ namespace MedicalPrescriptionServices.Controllers
         [HttpGet("GetAllMedications")]
         public async Task<ActionResult<IEnumerable<Medication>>> GetMedications()
         {
-            try
-            {
-                var medications = await _medicationService.GetMedicationsAsync();
-                return Ok(medications);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it in some other way
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            var medications = await _medicationService.GetMedicationsAsync();
+            return Ok(medications);
         }
+
 
         // GET: api/Medication/5
         [HttpGet("GetMedicationById/{id}")]
         public async Task<ActionResult<Medication>> GetMedication(int id)
         {
-            try
+            var medication = await _medicationService.GetMedicationByIdAsync(id);
+            if (medication == null)
             {
-                var medication = await _medicationService.GetMedicationByIdAsync(id);
-                if (medication == null)
-                {
-                    return NotFound();
-                }
-                return Ok(medication);
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it in some other way
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            return Ok(medication);
         }
+
 
         // PUT: api/Medication/5
         [HttpPut("UpdateMedication/{id}")]
         public async Task<IActionResult> PutMedication(int id, Medication medication)
         {
-            try
+            if (id != medication.Id)
             {
-                if (id != medication.Id)
-                {
-                    return BadRequest();
-                }
-                await _medicationService.UpdateMedicationAsync(medication);
-                return NoContent();
+                return BadRequest();
             }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it in some other way
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+
+            await _medicationService.UpdateMedicationAsync(medication);
+            return NoContent();
         }
+
 
         // POST: api/Medication
         [HttpPost("CreateMedication")]
         public async Task<ActionResult<Medication>> PostMedication(Medication medication)
         {
-            try
-            {
-                var id = await _medicationService.AddMedicationAsync(medication);
-                return CreatedAtAction(nameof(GetMedication), new { id }, medication);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it in some other way
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            var id = await _medicationService.AddMedicationAsync(medication);
+            return CreatedAtAction(nameof(GetMedication), new { id }, medication);
         }
+
 
         // DELETE: api/Medication/5
         [HttpDelete("DeleteMedication/{id}")]
         public async Task<IActionResult> DeleteMedication(int id)
         {
-            try
+            if (!_medicationService.MedicationExists(id))
             {
-                if (!_medicationService.MedicationExists(id))
-                {
-                    return NotFound();
-                }
-                await _medicationService.DeleteMedicationAsync(id);
-                return NoContent();
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it in some other way
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            await _medicationService.DeleteMedicationAsync(id);
+            return NoContent();
         }
+
     }
 }
