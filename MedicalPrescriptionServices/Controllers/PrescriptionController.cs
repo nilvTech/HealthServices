@@ -28,16 +28,10 @@ namespace MedicalPrescriptionServices.Controllers
         [HttpGet("GetAllPrescriptions")]
         public async Task<ActionResult<IEnumerable<Prescription>>> GetPrescriptions()
         {
-            try
-            {
-                var prescriptions = await _prescriptionService.GetPrescriptionsAsync();
-                return Ok(prescriptions);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            var prescriptions = await _prescriptionService.GetPrescriptionsAsync();
+            return Ok(prescriptions);
         }
+
 
         // GET: api/Prescription/5
         [HttpGet("GetPrescriptionById/{id}")]
