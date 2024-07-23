@@ -37,20 +37,14 @@ namespace MedicalPrescriptionServices.Controllers
         [HttpGet("GetPrescriptionById/{id}")]
         public async Task<ActionResult<Prescription>> GetPrescription(int id)
         {
-            try
+            var prescription = await _prescriptionService.GetPrescriptionByIdAsync(id);
+            if (prescription == null)
             {
-                var prescription = await _prescriptionService.GetPrescriptionByIdAsync(id);
-                if (prescription == null)
-                {
-                    return NotFound();
-                }
-                return Ok(prescription);
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            return Ok(prescription);
         }
+
 
         // PUT: api/Prescription/5
         [HttpPut("UpdatePrescription/{id}")]
