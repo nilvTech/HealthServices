@@ -50,35 +50,24 @@ namespace MedicalPrescriptionServices.Controllers
         [HttpPut("UpdatePrescription/{id}")]
         public async Task<IActionResult> PutPrescription(int id, Prescription prescription)
         {
-            try
+            if (id != prescription.Id)
             {
-                if (id != prescription.Id)
-                {
-                    return BadRequest();
-                }
-                await _prescriptionService.UpdatePrescriptionAsync(prescription);
-                return NoContent();
+                return BadRequest();
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+
+            await _prescriptionService.UpdatePrescriptionAsync(prescription);
+            return NoContent();
         }
+
 
         // POST: api/Prescription
         [HttpPost("CreatePrescription")]
         public async Task<ActionResult<Prescription>> PostPrescription(Prescription prescription)
         {
-            try
-            {
-                var id = await _prescriptionService.AddPrescriptionAsync(prescription);
-                return CreatedAtAction(nameof(GetPrescription), new { id }, prescription);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            var id = await _prescriptionService.AddPrescriptionAsync(prescription);
+            return CreatedAtAction(nameof(GetPrescription), new { id }, prescription);
         }
+
 
         // DELETE: api/Prescription/5
         [HttpDelete("DeletePrescription/{id}")]
