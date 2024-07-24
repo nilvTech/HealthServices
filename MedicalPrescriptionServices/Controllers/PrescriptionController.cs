@@ -73,16 +73,10 @@ namespace MedicalPrescriptionServices.Controllers
         [HttpDelete("DeletePrescription/{id}")]
         public async Task<IActionResult> DeletePrescription(int id)
         {
-            try
-            {
-                await _prescriptionService.DeletePrescriptionAsync(id);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            await _prescriptionService.DeletePrescriptionAsync(id);
+            return NoContent();
         }
+
 
         // Other methods...
 
@@ -90,23 +84,17 @@ namespace MedicalPrescriptionServices.Controllers
         [HttpPost("ValidatePrescription/{id}")]
         public async Task<ActionResult> ValidatePrescription(int id)
         {
-            try
+            var isValid = await _prescriptionService.ValidatePrescription(id);
+            if (isValid)
             {
-                var isValid = await _prescriptionService.ValidatePrescription(id);
-                if (isValid)
-                {
-                    return Ok("Prescription is valid.");
-                }
-                else
-                {
-                    return BadRequest("Prescription is not valid.");
-                }
+                return Ok("Prescription is valid.");
             }
-            catch (Exception ex)
+            else
             {
-                return StatusCode(500, "An error occurred while processing your request.");
+                return BadRequest("Prescription is not valid.");
             }
         }
+
     }
 
 }
