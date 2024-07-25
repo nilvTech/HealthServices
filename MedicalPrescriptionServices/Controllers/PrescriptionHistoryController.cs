@@ -34,19 +34,12 @@ namespace MedicalPrescriptionServices.Controllers
         [HttpGet("GetPrescriptionHistoryById/{id}")]
         public async Task<ActionResult<PrescriptionHistory>> GetPrescriptionHistory(int id)
         {
-            try
+            var prescriptionHistory = await _service.GetPrescriptionHistoryByIdAsync(id);
+            if (prescriptionHistory == null)
             {
-                var prescriptionHistory = await _service.GetPrescriptionHistoryByIdAsync(id);
-                if (prescriptionHistory == null)
-                {
-                    return NotFound();
-                }
-                return Ok(prescriptionHistory);
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            return Ok(prescriptionHistory);
         }
 
         [HttpPut("UpdatePrescriptionHistory/{id}")]
