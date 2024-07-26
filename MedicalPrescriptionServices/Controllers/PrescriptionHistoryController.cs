@@ -45,20 +45,14 @@ namespace MedicalPrescriptionServices.Controllers
         [HttpPut("UpdatePrescriptionHistory/{id}")]
         public async Task<IActionResult> PutPrescriptionHistory(int id, PrescriptionHistory prescriptionHistory)
         {
-            try
+            if (id != prescriptionHistory.Id)
             {
-                if (id != prescriptionHistory.Id)
-                {
-                    return BadRequest();
-                }
-                await _service.UpdatePrescriptionHistoryAsync(prescriptionHistory);
-                return NoContent();
+                return BadRequest();
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            await _service.UpdatePrescriptionHistoryAsync(prescriptionHistory);
+            return NoContent();
         }
+
 
         [HttpPost("CreatePrescriptionHistory")]
         public async Task<ActionResult<PrescriptionHistory>> PostPrescriptionHistory(PrescriptionHistory prescriptionHistory)
