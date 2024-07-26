@@ -65,19 +65,14 @@ namespace MedicalPrescriptionServices.Controllers
         [HttpDelete("DeletePrescriptionHistory/{id}")]
         public async Task<IActionResult> DeletePrescriptionHistory(int id)
         {
-            try
+            if (!_service.PrescriptionHistoryExists(id))
             {
-                if (!_service.PrescriptionHistoryExists(id))
-                {
-                    return NotFound();
-                }
-                await _service.DeletePrescriptionHistoryAsync(id);
-                return NoContent();
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+
+            await _service.DeletePrescriptionHistoryAsync(id);
+            return NoContent();
         }
+
     }
 }
