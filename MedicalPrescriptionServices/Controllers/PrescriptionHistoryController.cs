@@ -57,16 +57,10 @@ namespace MedicalPrescriptionServices.Controllers
         [HttpPost("CreatePrescriptionHistory")]
         public async Task<ActionResult<PrescriptionHistory>> PostPrescriptionHistory(PrescriptionHistory prescriptionHistory)
         {
-            try
-            {
-                var id = await _service.AddPrescriptionHistoryAsync(prescriptionHistory);
-                return CreatedAtAction(nameof(GetPrescriptionHistory), new { id }, prescriptionHistory);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            var id = await _service.AddPrescriptionHistoryAsync(prescriptionHistory);
+            return CreatedAtAction(nameof(GetPrescriptionHistory), new { id }, prescriptionHistory);
         }
+
 
         [HttpDelete("DeletePrescriptionHistory/{id}")]
         public async Task<IActionResult> DeletePrescriptionHistory(int id)
