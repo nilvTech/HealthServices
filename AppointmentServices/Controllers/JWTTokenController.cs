@@ -1,75 +1,63 @@
-﻿using PatientSatisfactionFeedback.Models;
-using PatientSatisfactionFeedback.Context;
-using Jose;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using PatientSatisfactionFeedback.Context;
+using PatientSatisfactionFeedback.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Authorization;
 
 namespace PatientSatisfactionFeedback.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
- 
     public class JWTTokenController : ControllerBase
     {
-        public IConfiguration _configuration;
-        public readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
 
         public JWTTokenController(IConfiguration configuration, ApplicationDbContext context)
         {
-            _context = context;
             _configuration = configuration;
+            _context = context;
         }
-        [HttpPost]
-        public async Task<IActionResult> Post(User user)
-        {
-            if (user != null && user.UserName != null && user.Password != null)
-            {
-                var userData = await GetUser(user.UserName, user.Password);
-                var jwt = _configuration.GetSection("Jwt").Get<Jwt>();
-                if (user != null)
-                {
-                    var claims = new[]
-                    {
-                        new Claim(JwtRegisteredClaimNames.Sub, jwt.Subject),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                         new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                         new Claim("Id", user.UserId.ToString()),
-                         new Claim("UserName", user.UserName),
-                         new Claim("Password", user.Password)
 
-                    };
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));
-                    var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                    var token = new JwtSecurityToken(
-                        jwt.Issuer,
-                        jwt.Audience,
-                        claims,
-                        expires: DateTime.Now.AddMinutes(60),
-                        signingCredentials: signIn);
-                    return Ok(new JwtSecurityTokenHandler().WriteToken(token));
-
-                }
-            
-            else
-            {
-                return BadRequest("Invalid Credentials");
-            }
-        }
-             else
-            {
-                return BadRequest("Invalid User Data");
-            }
-        }
-        [HttpGet]
-        public async Task<User> GetUser(string username, string password)
+        [HttpPost("login")]
+        public async Task<IActionResult> GenerateToken([FromBody] User loginUser)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username && u.Password == password);
+            if (loginUser == null || string.IsNullOrWhiteSpace(loginUser.UserName) || string.IsNullOrWhiteSpace(loginUser.Password))
+                return BadRequest("Username and password must be provided.");
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.UserName == loginUser.UserName && u.Password == loginUser.Password);
+
+            if (user == null)
+                return Unauthorized("Invalid credentials.");
+
+            var jwtSettings = _configuration.GetSection("Jwt").Get<Jwt>();
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, jwtSettings.Subject),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString("o")),
+                new Claim("UserId", user.UserId.ToString()),
+                new Claim("UserName", user.UserName)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: jwtSettings.Issuer,
+                audience: jwtSettings.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(60),
+                signingCredentials: credentials);
+
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return Ok(new { Token = tokenString });
         }
     }
 }
